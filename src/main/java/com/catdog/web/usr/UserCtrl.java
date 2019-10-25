@@ -33,7 +33,7 @@ public class UserCtrl {
 	public Map<?,?> existId(@PathVariable String uid){
 		IFunction<String, Integer> f = t-> userMapper.existId(uid);
 		map.clear();
-		map.put("msg", (f.apply(uid)==0) ? "Possible" : "Already Exist");
+		map.put("msg", (f.apply(uid)==0) ? "Success" : "Already Exist");
 		return map;
 	}
 	@PostMapping("/")

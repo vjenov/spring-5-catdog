@@ -2,30 +2,55 @@
 var auth = auth || {}
 auth = (()=>{
 	const WHEN_ERR = '호출하는 JS 파일을 찾지 못했습니다.'
-    let _, js, auth_vue_js, brd_vue_js
+    let _, js, auth_vue_js, brd_js, router_js
     let init = ()=>{
         _ = $.ctx()
         js = $.js()
         auth_vue_js = js+'/vue/auth_vue.js'
-        brd_vue_js = js+'/vue/brd_vue.js'
+        brd_js = js+'/brd/brd.js'
+        router_js = js+'/cmm/router.js'
     }
     function onCreate(){
         init()
-        $.getScript(auth_vue_js).done(()=>{
+        $.when(
+        	$.getScript(auth_vue_js),
+        	$.getScript(router_js)
+        )
+        .done(()=>{
         	setContentView()
     		$('#a_go_join').click(e=>{
          		e.preventDefault()
          		$('head').html(auth_vue.join_head())
 		        $('body').html(auth_vue.join_body())
+		        $('#uid').keyup(()=>{
+		        	if($('#uid').val().length > 2){
+		        		$.ajax({
+		        			url : _+'/users/'+$('#uid').val()+'/existId',
+		        	    	contentType : 'application/json',
+		        	    	success : d => {
+		        	    		alert('AJAX 성공 : '+d.msg)
+		        	    		if(d.msg === 'Success')
+		        	    			$('#dupl_check')
+		        	    			.val('사용가능한 ID 입니다')
+		        	    			.css('color','blue')
+		            			else
+		            				$('#dupl_check')
+		        	    			.val('이미 사용한 ID 입니다')
+		        	    			.css('color','red')
+		        	    		
+		        	    	},
+		        	    	error : e => {
+		        	    		alert('AJAX 실패')
+		        	    	}
+		        		})
+		        	}
+		        });
 		        $('<button>',{
 		            text : '회원가입',
 		            href : '#',
 		            click : e=>{
 		            	e.preventDefault()
-		            	if(!existId())
-		            		join()
-	            		else
-	            			alert('아이디 중복')
+		            	join()
 		            }
 		        })
 		        .addClass('btn btn-primary btn-lg btn-block')
@@ -34,97 +59,71 @@ auth = (()=>{
         }).fail(()=>{alert(WHEN_ERR)})
     }
     function setContentView(){
-    	 login()
+    	$('head').html(auth_vue.login_head({css: $.css(), img: $.img()}))
+        $('body').addClass('text-center')
+        .html(auth_vue.login_body({css: $.css(), img: $.img()}))
+		login()
     }
-    let existId =()=>{
-	    		let data = {uid : $('#uid').val()}
-	    		$.ajax({
-	    			url : _+'/users/'+$('#uid').val()+'/existId',
-	    			type : 'GET',
-	    			contentType : 'application/json',
-	    			success : d=>{
-	    				if(d.uid=='')
-	    				alert('AJAX 성공 아이디: '+d.uid)
-	    				else
-	    				alert('중복')
-	    			},
-	    			error : e=>{
-	    				alert('AJAX 실패')
-	    			}
-	    		})
-	    	}
-    
     let join =()=>{
-    	$('head').html(auth_vue.join_head())
-        $('body').html(auth_vue.join_body())
-        $('<button>',{
-            text : 'Continue to checkout',
-            href : '#',
-            click : e=>{
-            	e.preventDefault();
-            	let data = {uid : $('#uid').val(), pwd : $('#pwd').val(), pname : $('#pname').val()}
-            	alert('전송아이디: '+data.uid)
-                $.ajax({
-			    	url : _+'/users/',
-			    	type : 'POST',
-			    	dataType : 'json',
-			    	data : JSON.stringify(data),
-			    	contentType : 'application/json',
-			    	success : d => {
-			    		alert('AJAX 성공 : '+d.msg)
-			    		if(d.msg === 'Success')
-			    			login()
-			    		else
-			    			alert('회원가입 실패')
-			    	},
-			    	error : e => {
-			    		alert('AJAX 실패')
-			    	}
-            	})
-                
-            }
-        })
-        .addClass('btn btn-primary btn-lg btn-block')
-        .appendTo('#btn_join')
+    	let data = {uid : $('#uid').val(),
+    			pwd : $('#password').val(),
+    			uname : $('#pname').val()}
+    	alert('전송아이디: '+data.uid)
+        $.ajax({
+	    	url : _+'/users/',
+	    	type : 'POST',
+	    	dataType : 'json',
+	    	data : JSON.stringify(data),
+	    	contentType : 'application/json',
+	    	success : d => {
+	    		alert('AJAX 성공 : '+d.msg)
+	    		if(d.msg === 'Success'){
+	    			$('head').html(auth_vue.login_head({css: $.css(), img: $.img()}))
+	    	        $('body').addClass('text-center')
+	    	        .html(auth_vue.login_body({css: $.css(), img: $.img()}))
+	    			login()
+	    		}else
+    				alert('회원가입 실패')
+	    		
+	    	},
+	    	error : e => {
+	    		alert('AJAX 실패')
+	    	}
+    	})
     }
     let login =()=>{
-    	let x = {css: $.css(), img: $.img()}
-    	$('head').html(auth_vue.login_head(x))
-        $('body').addClass('text-center')
-        .html(auth_vue.login_body(x))
         $('<button>',{
-        	type : "submit",
-        	text : "Sign in",
+        	text : "로그인",
         	click : e => {
         		e.preventDefault()
-        		let data = {uid : $('#uid').val(), pwd : $('#pwd').val(), pname : $('#pname').val()}
-            	alert('전송아이디: '+data.uid)
-                $.ajax({
-			    	url : _+'/users/uid',
-			    	type : 'POST',
-			    	dataType : 'json',
-			    	data : JSON.stringify(data),
-			    	contentType : 'application/json',
-			    	success : d => {
-			    		alert(d.pname + '님 환영합니다.')
-			    		board()
-			    	},
-			    	error : e => {
-			    		alert('AJAX 실패')
-			    	}
-            	})
+        		$.ajax({
+        			url: _+'/users/'+$('#uid').val(),
+        			type: 'POST',
+        			data: JSON.stringify({
+      				  uid : $('#uid').val(),
+    				  pwd : $('#pwd').val()
+    				}),
+        			dataType: 'json',
+        			contentType: 'application/json',
+        			success: d =>{
+        				$.getScript(brd_js, ()=>{$.extend(new Session())
+        					sessionStorage.setItem('uid',d.uid)
+        					sessionStorage.getItem('uid')
+        					brd.onCreate()
+        				})
+        			},
+        			error: e =>{
+        				alert('AJAX ERROR ')
+        			}
+        			
+        		})
         	}
         })
         .addClass("btn btn-lg btn-primary btn-block")
         .appendTo('#btn_login')
     }
-    let board =()=>{
-//    	$('h1').html(auth_vue.my_page(d))
-    	  $.getScript(brd_vue_js).done(()=>{
-    		  let x = {css: $.css(), img: $.img()}
-    	    	$('head').html(brd_vue.brd_head(x))
-    	    	$('body').html(brd_vue.brd_body(x))
-    	  })	  
+    let existId =()=> {
+    	
     }
-    return {onCreate, join, login, existId, board}
+    return {onCreate, join, login}
 })();
