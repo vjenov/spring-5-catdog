@@ -8,14 +8,14 @@ auth = (()=>{
         js = $.js()
         auth_vue_js = js+'/vue/auth_vue.js'
         brd_js = js+'/brd/brd.js'
-        router_js = js+'/cmm/router.js'
+        router_js = js + '/cmm/router.js'
     }
-    function onCreate(){
+    let onCreate =()=>{
         init()
         $.when(
-        	$.getScript(auth_vue_js),
-        	$.getScript(router_js)
-        )
+			$.getScript(auth_vue_js),
+			$.getScript(router_js)
+		)		
         .done(()=>{
         	setContentView()
     		$('#a_go_join').click(e=>{
@@ -58,16 +58,16 @@ auth = (()=>{
     		})
         }).fail(()=>{alert(WHEN_ERR)})
     }
-    function setContentView(){
+    let setContentView =()=>{
     	$('head').html(auth_vue.login_head({css: $.css(), img: $.img()}))
         $('body').addClass('text-center')
         .html(auth_vue.login_body({css: $.css(), img: $.img()}))
-		login()
+        login()
     }
     let join =()=>{
     	let data = {uid : $('#uid').val(),
-    			pwd : $('#password').val(),
-    			uname : $('#pname').val()}
+    			pwd : $('#pwd').val(),
+    			pname : $('#pname').val()}
     	alert('전송아이디: '+data.uid)
         $.ajax({
 	    	url : _+'/users/',
@@ -106,12 +106,25 @@ auth = (()=>{
         			dataType: 'json',
         			contentType: 'application/json',
         			success: d =>{
-        				$.getScript(brd_js, ()=>{$.extend(new Session())
-        					sessionStorage.setItem('uid',d.uid)
-        					sessionStorage.getItem('uid')
-        					brd.onCreate()
-        				})
+        				alert('로그인성공'+router_js)
+        				$.when(
+        						$.getScript(router_js, ()=>{$.extend(new User(d))}),
+        						$.getScript(brd_js)
+            				).done(()=>{
+            				 	brd.onCreate()
+            				}
+            				).fail(()=>{
+            					alert('WHEN DONE 실패')
+            				})
         			},
+        			// ()=>{()=>{}
+        			/*
+        			 * $.getScript(brd_js, ()=>{
+        					$.getScript(x+'/resources/js/cmm/router.js',
+        							;
+        					
+        				})
+        			 * */
         			error: e =>{
         				alert('AJAX ERROR ')
         			}

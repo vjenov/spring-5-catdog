@@ -6,5 +6,6 @@
     </settings>
     <typeAliases>
        <typeAlias alias="User"  type="com.catdog.web.usr.User"/>
+       <typeAlias alias="Article"  type="com.catdog.web.brd.Article"/>
     </typeAliases>
 </configuration>
