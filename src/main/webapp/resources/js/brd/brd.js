@@ -39,7 +39,6 @@ brd = (()=>{
 		.click(()=>{
 		})
 		$('<input>', {
-			type:"submit",
 			style:"float:right;width:100px;margin-right:10px",
 			value:"전송"
 		})
@@ -62,9 +61,7 @@ brd = (()=>{
 				dataType:'json',
 				contentType:'application/json',
 				success:d=>{
-					alert('ajax 메세지'+d.msg)
-					setContentView()
-					navigation()
+					$('#recent_updates').html('<h1>목록 불러오기</h1>')
 				},
 				fail:e=>{
 					alert('AJAX실패')
