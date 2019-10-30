@@ -11,7 +11,8 @@
 <script src="<%=application.getContextPath()%>/resources/js/brd/brd.js"></script>
 <script src="<%=application.getContextPath()%>/resources/js/vue/brd_vue.js"></script>
 <script src="<%=application.getContextPath()%>/resources/js/cmm/navi.js"></script>
-<script src="<%=application.getContextPath()%>/resources/js/vue/navi_vue.js"></script> 
+<script src="<%=application.getContextPath()%>/resources/js/vue/navi_vue.js"></script>
+<script src="<%=application.getContextPath()%>/resources/js/adm/adm.js"></script>
 <script>
 	app.run('<%=application.getContextPath()%>'); 
 </script>

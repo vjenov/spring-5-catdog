@@ -2,7 +2,7 @@
 var auth = auth || {}
 auth = (()=>{
 	const WHEN_ERR = '호출하는 JS 파일을 찾지 못했습니다.'
-    let _, js, css, img, auth_vue_js, brd_js, router_js, cookie_js
+    let _, js, css, img, auth_vue_js, brd_js, router_js, cookie_js, admin_js
     let init =()=>{
         _ = $.ctx()
         js = $.js()
@@ -12,6 +12,7 @@ auth = (()=>{
         brd_js = js+'/brd/brd.js'
         router_js = js + '/cmm/router.js'
         cookie_js = js + '/cmm/cookie.js'
+        admin_js = js + 'adm/adm.js'
     }
     let onCreate =()=>{
         init()
@@ -68,6 +69,7 @@ auth = (()=>{
         $('body').addClass('text-center')
         .html(auth_vue.login_body({css: $.css(), img: $.img()}))
         login()
+        access()
     }
     let join =()=>{
     	let data = {uid : $('#uid').val(),
@@ -127,8 +129,34 @@ auth = (()=>{
         .addClass("btn btn-lg btn-primary btn-block")
         .appendTo('#btn_login')
     }
-    let existId =()=> {
-    	
+    let access =()=>{
+    	$('#a_go_admin').click(()=>{
+    		let ok = confirm('사원입니까')
+        	if(ok){
+        		let aid = prompt('사원번호를 입력하시오')
+        		$.ajax({
+        			url: _+'/admins/'+aid,
+        			type: 'POST',
+        			data: JSON.stringify({
+        				aid : aid,
+        				pwd : prompt('비밀번호를 입력하시오')
+        			}),
+        			dataType: 'json',
+        			contentType: 'application/json',
+        			success: d=>{
+        				if(d==='Success'){
+        					alert('welcome')
+        					admin.onCreate()
+        				}else(
+        					alert('접근권한이 없습니다.'))
+        					app.run(_)
+        			},
+        			error : function(request,status,error){
+        		        alert("error code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        		    }
+        		})
+        	}	
+    	})
     }
-    return {onCreate, join, login}
+    return {onCreate, join, login, access}
 })();

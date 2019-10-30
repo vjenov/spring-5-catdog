@@ -51,6 +51,7 @@ public class ArticleCtrl {
 	
 	@PutMapping("/{articleseq}")
 	public Article editArticle(@PathVariable String articleseq, @RequestBody Article param){
+		printer.accept("edit 진입");
 		list.clear();
 		IConsumer<Article> c = o-> articleMapper.editArticle(o);
 		c.accept(param);
