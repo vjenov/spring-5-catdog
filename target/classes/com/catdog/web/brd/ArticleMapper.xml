@@ -5,8 +5,24 @@
 <mapper namespace="com.catdog.web.brd.ArticleMapper">
 	
 	<insert id="insertArticle" parameterType="Article">
-		INSERT INTO ARTICLE(img, uid, comments, msg, title, content, boardtype, rating) values(
+		INSERT INTO ARTICLE(IMG, UID, COMMENTS, MSG, TITLE, CONTENT, BOARD_TYPE, RATING) VALUES(
 			#{img}, #{uid}, #{comments}, #{msg}, #{title}, #{content}, #{boardtype}, #{rating}
 		)
 	</insert>
+	<select id="countArticle" resultType="String">
+		SELECT COUNT(*) FROM ARTICLE;
+	</select>
+	<select id="selectAll" resultType="Article">
+		SELECT A.BOARD_TYPE AS boardtype, A.* FROM ARTICLE A;
+	</select>
+	<update id="editArticle" parameterType="Article">
+		UPDATE ARTICLE SET TITLE = #{title}, CONTENT = #{CONTENT} WHERE ARTICLESEQ LIKE #{articleseq};
+	</update>
+	<delete id="deleteArticle" parameterType="Article">
+		DELETE FROM ARTICLE WHERE ARTICLESEQ LIKE #{articleseq}
+	</delete>
+	<select id="getArticle" resultType="Article">
+    		SELECT * FROM ARTICLES
+    		WHERE ARTICLESEQ LIKE #{articleseq}
+    	</select>
 </mapper>

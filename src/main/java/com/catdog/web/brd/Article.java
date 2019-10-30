@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Article {
-	private String artseq, img, uid, comments, msg, title, content, boardtype, rating;
+	private String articleseq, img, uid, comments, msg, title, content, boardtype, rating;
 }
