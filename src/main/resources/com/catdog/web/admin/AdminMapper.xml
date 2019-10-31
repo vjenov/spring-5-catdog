@@ -11,6 +11,6 @@
     </insert>
     <select id="selectAdminById" resultType="ADMIN">
         SELECT * FROM ADMIN
-        WHERE AID LIKE #{aid} AND PWD LIKE #{PWD}
+        WHERE AID LIKE #{aid} AND PWD LIKE #{pwd}
     </select>
 </mapper>

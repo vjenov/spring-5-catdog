@@ -30,9 +30,12 @@ public class AdminCtrl {
 		return map;
 	}
 	@PostMapping("/{aid}")
-	public String access(@PathVariable String aid, @RequestBody Admin param) {
-		IFunction<Admin, Admin> f = t-> adminMapper.selectAdminById(param);
-		return (f.apply(param)!=null) ? "Success" : "fail";
+	public Map<?,?> access(@PathVariable String aid, @RequestBody Admin param) {
+		map.clear();
+		IFunction<Admin, Admin> f = t-> adminMapper.selectAdminById(t);
+		f.apply(param);
+		map.put("msg", (f.apply(param)!=null) ? "Success" : "Already Exist");
+		return map;
 	}
 	@PutMapping("/{aid}")
 	public Map<?,?> editState(@PathVariable String aid, @RequestBody Admin param) {

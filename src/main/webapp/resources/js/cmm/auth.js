@@ -2,7 +2,7 @@
 var auth = auth || {}
 auth = (()=>{
 	const WHEN_ERR = '호출하는 JS 파일을 찾지 못했습니다.'
-    let _, js, css, img, auth_vue_js, brd_js, router_js, cookie_js, admin_js
+    let _, js, css, img, auth_vue_js, brd_js, router_js, cookie_js, adm_js
     let init =()=>{
         _ = $.ctx()
         js = $.js()
@@ -12,7 +12,7 @@ auth = (()=>{
         brd_js = js+'/brd/brd.js'
         router_js = js + '/cmm/router.js'
         cookie_js = js + '/cmm/cookie.js'
-        admin_js = js + 'adm/adm.js'
+        adm_js = js + '/adm/adm.js'
     }
     let onCreate =()=>{
         init()
@@ -20,7 +20,8 @@ auth = (()=>{
 			$.getScript(auth_vue_js),
 			$.getScript(router_js),
 			$.getScript(brd_js),
-			$.getScript(cookie_js)
+			$.getScript(cookie_js),
+			$.getScript(adm_js)
 		)		
         .done(()=>{
         	setContentView()
@@ -43,7 +44,6 @@ auth = (()=>{
 		            				$('#dupl_check')
 		        	    			.val('이미 사용한 ID 입니다')
 		        	    			.css('color','red')
-		        	    		
 		        	    	},
 		        	    	error : e => {
 		        	    		alert('AJAX 실패')
@@ -130,8 +130,10 @@ auth = (()=>{
         .appendTo('#btn_login')
     }
     let access =()=>{
-    	$('#a_go_admin').click(()=>{
+    	$('#a_go_admin').click(e=>{
+    		e.preventDefault()
     		let ok = confirm('사원입니까')
+    		adm.onCreate()
         	if(ok){
         		let aid = prompt('사원번호를 입력하시오')
         		$.ajax({
@@ -144,19 +146,19 @@ auth = (()=>{
         			dataType: 'json',
         			contentType: 'application/json',
         			success: d=>{
-        				if(d==='Success'){
+        				if(d.msg==='Success'){
         					alert('welcome')
-        					admin.onCreate()
+        					adm.onCreate()
         				}else(
         					alert('접근권한이 없습니다.'))
         					app.run(_)
         			},
         			error : function(request,status,error){
         		        alert("error code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-        		    }
+        		       }
         		})
-        	}	
+        	}
     	})
     }
-    return {onCreate, join, login, access}
+    return {onCreate, join, login}
 })();

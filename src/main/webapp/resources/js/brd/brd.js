@@ -29,7 +29,7 @@ brd = (()=>{
 		$('head').html(brd_vue.brd_head({css: $.css(), img: $.img()}))
         $('body').addClass('text-center')
         .html(brd_vue.brd_body({ctx: '/web',css: $.css(), img: $.img()}))
-        $(navi_vue.nav()).appendTo('#navi')
+        $(navi_vue.navi()).appendTo('#navi')
         recent_updates()
 	}
 	let recent_updates= () =>{
@@ -147,9 +147,9 @@ brd = (()=>{
 				$('#recent_updates div.container-fluid').remove()
 				recent_updates()
 			},
-			error : function(request,status,error){
-		        alert("error code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-		       }
+			fail : e=>{
+				alert('ajax실패')
+			}
 			
 		})
 		
@@ -172,9 +172,9 @@ brd = (()=>{
 				$('#recent_updates div.container-fluid').remove()
 				recent_updates()
 			},
-			error : function(request,status,error){
-		        alert("error code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-		       }
+			fail : e=>{
+				alert('ajax실패')
+			}
 		})
 		
 	}

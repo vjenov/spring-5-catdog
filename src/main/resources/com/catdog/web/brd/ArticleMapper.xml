@@ -15,9 +15,9 @@
 	<select id="selectAll" resultType="Article">
 		SELECT A.BOARD_TYPE AS boardtype, A.* FROM ARTICLE A;
 	</select>
-	<select id="editArticle" resultType="Article">
-		UPDATE ARTICLE SET TITLE = #{title}, CONTENT = #{CONTENT} WHERE ARTICLESEQ LIKE #{articleseq};
-	</select>
+	<update id="editArticle" parameterType="Article">
+		UPDATE ARTICLE SET TITLE = #{title}, CONTENT = #{content} WHERE ARTICLESEQ LIKE #{articleseq};
+	</update>
 	<delete id="deleteArticle" parameterType="Article">
 		DELETE FROM ARTICLE WHERE ARTICLESEQ LIKE #{articleseq}
 	</delete>
