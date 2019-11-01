@@ -6,7 +6,8 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="<%=application.getContextPath()%>/resources/js/app.js"></script>
 <script src="<%=application.getContextPath()%>/resources/js/cmm/router.js"></script> 
-<script src="<%=application.getContextPath()%>/resources/js/cmm/auth.js"></script> 
+<script src="<%=application.getContextPath()%>/resources/js/cmm/auth.js"></script>
+<script src="<%=application.getContextPath()%>/resources/js/cmm/proxy.js"></script>
 <script src="<%=application.getContextPath()%>/resources/js/vue/auth_vue.js"></script>
 <script src="<%=application.getContextPath()%>/resources/js/brd/brd.js"></script>
 <script src="<%=application.getContextPath()%>/resources/js/vue/brd_vue.js"></script>

@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,7 +33,8 @@ public class AdminCtrl {
 		map.clear();
 		IFunction<Admin, Admin> f = t-> adminMapper.selectAdminById(t);
 		f.apply(param);
-		map.put("msg", (f.apply(param)!=null) ? "Success" : "Already Exist");
+		map.put("msg", (f.apply(param)!=null) ? "Success" : "fail");
+		System.out.println(map.get("msg"));
 		return map;
 	}
 	@PutMapping("/{aid}")

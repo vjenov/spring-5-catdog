@@ -13,7 +13,7 @@ adm = (()=>{
 	let onCreate=()=>{
 		init()
 		$.when(
-				$.getScript(navi_vue_js)
+			$.getScript(navi_vue_js)
 		).done(()=>{
 			setContentView()
 		}).fail(()=>{
@@ -48,7 +48,7 @@ adm = (()=>{
 						$(this).siblings().removeClass('active')
 						switch($(this).attr('name')){
 						case 'web_crawl':
-							
+							webCrawl();
 							break;
 						case 'cust_mgmt':
 							
@@ -74,24 +74,36 @@ adm = (()=>{
 		alert('고객관리')
 	}
 	let webCrawl=()=>{
-		$('<form action="/action_page.php">'+
-				'  <select id = "name" size="4" multiple>'+
+		$('#right').empty()
+		$('</br></br></br></br></br><h2>Web Crawling</h2></br></br></br></br></br></br></br>'+
+				'<form id="crawl_form" class="form-inline my-2 my-lg-0">'+
+				'  <select name="site" size="1" multiple>'+
 				'  </select>'+
-				'  <br><br>'+
-				'  <input type="submit">'+
-				'</form>').appendTo('#right')
-		$( '<input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">'+
-	        '<button id="search" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>')
-	        .appendTo('#right')
-		$.each([{name : '집', url : '집'},
-			{name : '에', url : '에'},
-			{name : '가', url : '가'},
-			{name : '고', url : '고'},
-			{name : '싶', url : '싶'},
-			{name : '다', url : '다'}],
-			(i,j)=>{
-				$('<option value="">'+j.name+'</option>').appendTo('#name')
-		}
-	)}
-	return {onCreate}
-})()
+		          '<input class="form-control mr-sm-2" type="text" placeholder="insert URL for crawling" aria-label="Search">'+
+				'</form>')
+		.appendTo('#right')
+		$('#crawl_form input[class="form-control mr-sm-2"]')
+		.css({width:'80%'})
+		$.each([{sub:'naver.com'},{sub:'daum.net'},{sub:'google.com'},{sub:'youtube.com'}],(i,j)=>{
+			$('<option value='+j.sub+'>'+j.sub+'</option>').appendTo('#crawl_form select')
+		})
+		$('<button class="btn btn-secondary my-2 my-sm-0" type="submit">go crawl</button>')
+		.appendTo('#crawl_form')
+		.click(e=>{
+			e.preventDefault() 
+			let arr = [$('#crawl_form select[name="site"]').val(),
+				$('#crawl_form input[type="text"]').val()]
+			if(!$.fn.nullChecker(arr)){
+				$.getJSON(_
+						+'/tx/crawling/'+ arr[0] + '/ '+ arr[1],
+						d=>{
+					alert(d.msg)
+						})
+			}else{
+				alert('빈칸을 채우시오')
+			}
+		})
+	}
+	return{onCreate}	
+	})
+()
