@@ -1,5 +1,7 @@
 package com.catdog.web.brd;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.catdog.web.cmm.IConsumer;
 import com.catdog.web.cmm.IFunction;
 import com.catdog.web.cmm.ISupplier;
-import com.catdog.web.usr.UserCtrl;
 import com.catdog.web.utl.Printer;
 
 @RestController
@@ -75,11 +76,14 @@ public class ArticleCtrl {
 		map.put("count", s.get());
 		return map;
 	}
-	@GetMapping("/")
-	public List<Article> list() {
+	@GetMapping("/page/{pageNo}")
+	public Map<?,?> list(@PathVariable String pageNo) {
+		HashMap<String, Object> map = new HashMap<>(); 
 		list.clear();
 		ISupplier<List<Article>> s =()-> articleMapper.selectAll();
-		printer.accept("전체글목록\n"+s.get());
-		return s.get();
+		printer.accept("해당 페이지 글목록\n"+s.get());
+		map.put("articles", s.get());
+		map.put("pages", Arrays.asList(1,2,3,4,5));
+		return map;
 	}
 }
