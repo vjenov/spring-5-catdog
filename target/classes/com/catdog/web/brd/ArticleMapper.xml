@@ -12,12 +12,12 @@
 	<select id="countArticle" resultType="String">
 		SELECT COUNT(*) FROM ARTICLE;
 	</select>
-	<select id="selectAll" resultType="Article">
+	<select id="selectAll" resultType="Article" parameterType="Proxy">
 		SELECT A.BOARD_TYPE AS boardtype, A.*
 		FROM(SELECT *
 			FROM ARTICLE
 			ORDER BY ARTICLESEQ DESC) A
-		LIMIT 0,5;
+		LIMIT #{startRow}, #{pageSize};
 	</select>
 	<update id="editArticle" parameterType="Article">
 		UPDATE ARTICLE SET TITLE = #{title}, CONTENT = #{content} WHERE ARTICLESEQ LIKE #{articleseq};

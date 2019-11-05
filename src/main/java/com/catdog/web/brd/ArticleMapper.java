@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.catdog.web.pxy.Proxy;
+
 @Repository
 public interface ArticleMapper {
 	public void insertArticle(Article param);
@@ -11,5 +13,5 @@ public interface ArticleMapper {
 	public void editArticle(Article param);
 	public void deleteArticle(Article param);
 	public String countArticle();
-	public List<Article> selectAll();
+	public List<Article> selectAll(Proxy pxy);
 }
