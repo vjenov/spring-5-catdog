@@ -10,7 +10,7 @@ navi_vue = {
 	        '        <ul class="navbar-nav mr-auto">'+
 	        '          <li id="menu_text" class="nav-item active"></li>'+
 	        '          <li id="menu_logout" class="nav-item"></li>'+
-	        '          <li id="menu_mypage" class="nav-item"></li>'+
+	        '          <li id="menu_write" class="nav-item"></li>'+
 	        '          <li class="nav-item">'+
 	        '            <a class="nav-link" href="#">Switch account</a>'+
 	        '          </li>'+

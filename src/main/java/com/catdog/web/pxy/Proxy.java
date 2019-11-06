@@ -1,7 +1,9 @@
 package com.catdog.web.pxy;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -22,29 +24,23 @@ public class Proxy {
     private int pageNum, pageSize, startRow,endRow;
     private String search;
     private final int BLOCK_SIZE = 5;
+    private boolean existPrev, existNext;
     @Autowired Printer p;
     @Autowired ArticleMapper articleMapper;
     
+    @SuppressWarnings("unused")
     public void paging() {
     	ISupplier<String> s = ()->articleMapper.countArticle();
     	int totalCount = Integer.parseInt(s.get());
     	int pageCount = (totalCount%pageSize==0)?totalCount/pageSize:(totalCount/pageSize)+1;
-    	int startRow = (pageNum-1) * pageSize;
-    	int endRow = (pageNum!=totalCount)?startRow + pageSize - 1:totalCount-1;
-    	int blockCount = (pageCount%pageSize==0)?pageCount/BLOCK_SIZE:(pageCount/BLOCK_SIZE)+1;
+    	startRow = (pageNum-1) * pageSize;
+    	endRow = (pageNum==pageCount) ? totalCount -1 : startRow + pageSize -1;
+    	int blockCount = (pageCount%BLOCK_SIZE==0)?pageCount/BLOCK_SIZE:(pageCount/BLOCK_SIZE)+1;
     	int blockNum = (pageNum - 1) / BLOCK_SIZE;
     	int startPage = blockNum*BLOCK_SIZE + 1;
-    	int endPage = BLOCK_SIZE * (blockNum + 1);
-    	boolean existPrev = false;
-    	boolean existNext = false;
-    	if(blockNum==blockCount) {
-    		existPrev = true;
-    	}else if(blockNum==0) {
-    		existNext = true;
-    	}else {
-    		existPrev = true;
-    		existNext = true;
-    	}
+    	int endPage = (BLOCK_SIZE * (blockNum + 1) > pageCount) ? pageCount : BLOCK_SIZE * (blockNum + 1);
+    	existPrev = blockNum > 0;
+    	existNext = blockNum < blockCount -1;
     }
     public int parseInt(String param) {
     	Function<String, Integer> f = s -> Integer.parseInt(s);
@@ -72,5 +68,8 @@ public class Proxy {
         
         return proxyList;
     }
-
+    public int random(int min, int max) {
+		BiFunction<Integer, Integer, Integer> f = (t,u) -> (int) (Math.random()*u-t)+t;
+    	return f.apply(min,max);
+    }
 }

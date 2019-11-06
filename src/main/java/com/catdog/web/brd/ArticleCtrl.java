@@ -36,7 +36,6 @@ public class ArticleCtrl {
 	@Autowired Proxy pxy;
 	@PostMapping("/")
 	public Map<?,?> write(@RequestBody Article param){
-		printer.accept("글쓰기 컨트롤러 진입");
 		param.setBoardtype("게시판");
 		IConsumer<Article> c = o -> articleMapper.insertArticle(param);
 		c.accept(param);
@@ -51,17 +50,14 @@ public class ArticleCtrl {
 	
 	@PutMapping("/{articleseq}")
 	public Article editArticle(@PathVariable String articleseq, @RequestBody Article param){
-		printer.accept("edit 진입");
 		list.clear();
 		IConsumer<Article> c = o-> articleMapper.editArticle(o);
 		c.accept(param);
 		IFunction<Article, Article> f = t-> articleMapper.getArticle(t);
-		printer.accept("글목록 :::" + f.apply(param));
 		return f.apply(param);
 	}
 	@DeleteMapping("/{articleseq}")
 	public Map<?,?> deleteArticle(@PathVariable String articleseq, @RequestBody Article param){
-		printer.accept("delete도착");
 		IConsumer<Article> c = o-> articleMapper.deleteArticle(o);
 		map.accept(Arrays.asList("msg"), Arrays.asList("Success"));
 		c.accept(param);
@@ -70,7 +66,6 @@ public class ArticleCtrl {
 	@GetMapping("/count")
 	public Map<?,?> countNum() {
 		ISupplier<String> s = () -> articleMapper.countArticle();
-		printer.accept("매퍼값" + s.get());
 		map.accept(Arrays.asList("count"), Arrays.asList(s.get()));
 		return map.get();
 	}
@@ -80,10 +75,8 @@ public class ArticleCtrl {
 		pxy.setPageNum(pxy.parseInt(pageNo));
 		pxy.setPageSize(pxy.parseInt(pageSize));
 		pxy.paging();
-		list.clear();
 		ISupplier<List<Article>> s =()-> articleMapper.selectAll(pxy);
-		printer.accept("해당 페이지 글목록\n"+s.get());
-		map.accept(Arrays.asList("articles", "pages"), Arrays.asList(s.get(), Arrays.asList(1,2,3,4,5)));
+		map.accept(Arrays.asList("articles", "pages", "pxy"), Arrays.asList(s.get(), Arrays.asList(1,2,3,4,5),pxy));
 		return map.get();
 	}
 }
