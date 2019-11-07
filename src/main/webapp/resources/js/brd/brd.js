@@ -92,6 +92,7 @@ brd = (()=>{
 			.click(()=>{
 				recent_updates({page : pxy.prevBlock, size: pxy.pageSize})
 			})
+			
 		}
 		let i = 0
 		for(i = pxy.startPage; i<= pxy.endPage; i++) {
