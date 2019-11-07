@@ -1,5 +1,6 @@
 package com.catdog.web.pxy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,9 @@ import com.catdog.web.utl.Printer;
 import lombok.Data;
 @Component @Data @Lazy
 public class Proxy {
-    private int pageNum, pageSize, startRow,endRow;
+    private int totalCount, startRow, endRow,
+    			pageCount, pageNum, pageSize, startPage, endPage, 
+    			blockCount, blockNum, nextBlock, prevBlock;
     private String search;
     private final int BLOCK_SIZE = 5;
     private boolean existPrev, existNext;
@@ -31,16 +34,18 @@ public class Proxy {
     @SuppressWarnings("unused")
     public void paging() {
     	ISupplier<String> s = ()->articleMapper.countArticle();
-    	int totalCount = Integer.parseInt(s.get());
-    	int pageCount = (totalCount%pageSize==0)?totalCount/pageSize:(totalCount/pageSize)+1;
+    	totalCount = Integer.parseInt(s.get());
+    	pageCount = (totalCount%pageSize==0)?totalCount/pageSize:(totalCount/pageSize)+1;
     	startRow = (pageNum-1) * pageSize;
     	endRow = (pageNum==pageCount) ? totalCount -1 : startRow + pageSize -1;
-    	int blockCount = (pageCount%BLOCK_SIZE==0)?pageCount/BLOCK_SIZE:(pageCount/BLOCK_SIZE)+1;
-    	int blockNum = (pageNum - 1) / BLOCK_SIZE;
-    	int startPage = blockNum*BLOCK_SIZE + 1;
-    	int endPage = (BLOCK_SIZE * (blockNum + 1) > pageCount) ? pageCount : BLOCK_SIZE * (blockNum + 1);
+    	blockCount = (pageCount%BLOCK_SIZE==0)?pageCount/BLOCK_SIZE:(pageCount/BLOCK_SIZE)+1;
+    	blockNum = (pageNum - 1) / BLOCK_SIZE;
+    	startPage = blockNum*BLOCK_SIZE + 1;
+    	endPage = (BLOCK_SIZE * (blockNum + 1) > pageCount) ? pageCount : BLOCK_SIZE * (blockNum + 1);
     	existPrev = blockNum > 0;
     	existNext = blockNum < blockCount -1;
+    	prevBlock = startPage - BLOCK_SIZE;
+    	nextBlock = startPage + BLOCK_SIZE;
     }
     public int parseInt(String param) {
     	Function<String, Integer> f = s -> Integer.parseInt(s);

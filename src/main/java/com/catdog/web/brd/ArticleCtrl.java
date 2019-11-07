@@ -76,7 +76,7 @@ public class ArticleCtrl {
 		pxy.setPageSize(pxy.parseInt(pageSize));
 		pxy.paging();
 		ISupplier<List<Article>> s =()-> articleMapper.selectAll(pxy);
-		map.accept(Arrays.asList("articles", "pages", "pxy"), Arrays.asList(s.get(), Arrays.asList(1,2,3,4,5),pxy));
+		map.accept(Arrays.asList("articles","pxy"), Arrays.asList(s.get(),pxy));
 		return map.get();
 	}
 }
